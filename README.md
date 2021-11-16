@@ -62,7 +62,7 @@ https://url-shortener-ztiqwvbfiq-rj.a.run.app/doc/
 
 ## Performance testing using JMeter
 
-20 users making 500 requests simultaneously at 00:01:19:
+20 users making 500 parallel requests during 1min 19sec, total 10,000 requests:
 
 ![response-time-graph](doc/response-time-graph.png?raw=true "response-time-graph")
 
