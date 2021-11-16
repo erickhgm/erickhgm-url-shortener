@@ -63,11 +63,14 @@ https://url-shortener-ztiqwvbfiq-rj.a.run.app/doc/
 ## Performance testing using JMeter
 
 20 users making 500 requests simultaneously at 00:01:19:
-![response time graph](doc/response-time-graph.png?raw=true "response time graph")
+
+![response-time-graph](doc/response-time-graph.png?raw=true "response-time-graph")
 
 CPU utilization:
+
 ![cpu-utilization](doc/cpu-utilization.png?raw=true "cpu-utilization")
 
 Memory utilization:
+
 ![memory-utilization](doc/memory-utilization.png?raw=true "memory-utilization")
 
