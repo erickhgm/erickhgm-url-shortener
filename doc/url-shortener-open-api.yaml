@@ -1,0 +1,241 @@
+openapi: 3.0.1
+info:
+  title: URL Shortener
+  description: This is a small API that provides basic REST endpoints to shorten a URL, get information about the URL, update the URL, and get statistics on most accessed URLs.
+  contact:
+    email: erick.henrique.gm@gmail.com
+  version: 1.0.0
+externalDocs:
+  description: Find out more about URL Shortener
+  url: https://github.com/erickhgm/url-shortener
+servers:
+- url: https://url-shortener-ztiqwvbfiq-rj.a.run.app
+
+tags:
+- name: urls
+  description: Everything about short urls
+- name: redirect
+  description: Redirect to url using an id
+- name: stats
+  description: Get statistics from the most clicked urls
+    
+paths:
+  /urls:
+    post:
+      tags:
+      - urls
+      summary: Create a new short url
+      requestBody:
+        description: Object with url attribute to be shortened
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UrlRequest'
+        required: true
+      responses:
+        200:
+          description: not found
+          content:
+             application/json:
+              schema:
+                $ref: '#/components/schemas/UrlResponse'
+        500:
+          description: internal server error
+          content:
+             application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /urls/{id}:  
+    get:
+      tags:
+      - urls
+      summary: Finds url by id
+      description: Get all url attributes
+      parameters:
+      - name: id
+        in: path
+        description: Id of a url that needs to be fetched
+        required: true
+        schema:
+          type: string
+          example: "0aYS7JJ"
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UrlDetails'
+        404:
+          description: not found
+          content:
+             application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        500:
+          description: internal server error
+          content:
+             application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      tags:
+      - urls
+      summary: Update an existing url
+      description: Only **url** and **enable** attibutes can be updated
+      parameters:
+      - name: id
+        in: path
+        description: Id of a url that needs to be fetched
+        required: true
+        schema:
+          type: string
+          example: "0aYS7JJ"
+      requestBody:
+        description: Object with url attribute to be shortened
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UrlUpdateRequest'
+        required: true
+      responses:
+        200:
+          description: successful operation
+        404:
+          description: not found
+          content:
+             application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        500:
+          description: internal server error
+          content:
+             application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /r/{id}:
+    get:
+      tags:
+      - redirect
+      summary: Redirect to the url destination
+      parameters:
+      - name: id
+        in: path
+        description: Id of a url that needs to be fetched
+        required: true
+        schema:
+          type: string
+          example: "0aYS7JJ"
+      responses:
+        302:
+          description: found
+        404:
+          description: not found
+        500:
+          description: internal server error
+          content:
+             application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /stats:
+    get:
+      tags:
+      - stats
+      summary: Get statistics from the most clicked urls by **limit** param
+      parameters:
+      - name: limit
+        in: query
+        description: Number of the most clicked urls
+        schema:
+          type: integer
+          example: 10
+      responses:
+        200:
+          description: found
+          content:
+             application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfUrls'
+        500:
+          description: internal server error
+          content:
+             application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+                
+components:
+  schemas:
+    UrlRequest:
+      type: object
+      properties:
+        url:
+          type: string
+          example: "https://github.com/erickhgm/url-shortener"
+    UrlResponse:
+      type: object
+      properties:
+        url:
+          type: string
+          example: "https://url-shortener-ztiqwvbfiq-rj.a.run.app/r/IigGq27"
+    UrlUpdateRequest:
+      type: object
+      properties:
+        url:
+          type: string
+          example: "https://github.com/erickhgm/url-shortener"
+        enable:
+          type: boolean
+          example: true
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Error while dialing dial tcp 172.24.0.4:8080: connect: connection refused"
+        timestamp:
+          type: string
+          example: "2021-11-15T01:49:30.8069924Z"
+    NotFoundResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Document Id IigGq27- not found"
+        timestamp:
+          type: string
+          example: "2021-11-15T01:49:30.8069924Z"
+    UrlDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "0aYS7JJ"
+        url:
+          type: string
+          example: "https://github.com/erickhgm/url-shortener"
+        createTime:
+          type: string
+          example: "2021-11-15T01:49:30.8069924Z"
+        enable:
+          type: boolean
+          example: true
+        clicks:
+          type: integer
+          example: 1
+    ArrayOfUrls:
+      type: array
+      items:
+        $ref: '#/components/schemas/ArrayOfUrls'
+      example:
+        - id: "0aYS7JJ"
+          url: "https://github.com/erickhgm/url-shortener"
+          createTime: "2021-11-15T01:49:30.8069924Z"
+          enable: true
+          clicks: 20
+        - id: "0aYS7JJ"
+          url: "https://github.com/erickhgm/url-shortener-counter"
+          createTime: "2021-11-15T01:49:30.8069924Z"
+          enable: true
+          clicks: 10

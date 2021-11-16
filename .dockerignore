@@ -1,0 +1,9 @@
+*
+!adapters
+!config
+!doc
+!domain
+!static
+!go.mod
+!go.sum
+!main.go
